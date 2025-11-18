@@ -1,0 +1,34 @@
+---
+title: "Notes on NFL Survival Betting Strategies: An OR Perspective"
+format: pdf
+editor: visual
+---
+
+# NFL Survival Betting Strategies-An OR Perspective
+
+## Introduction
+
+Survival betting pools in the NFL is based on each week being in a pool where you select a team to win. If your team wins, you advance to the next week. The goal is to be the last one "surviving".
+
+The goal of this analysis is to examine different betting strategies. There is a wide variety of selection strategies. These are generally naive algorithms.
+
+-   Selecting the strongest team each week. Selecting the team with the strongest odds of winning each week.
+
+-   Point spread, win probability, ELO differential, or other metric).
+
+Factors that might affect:
+
+-   Contrarian strategies trying to pick "unpopular" teams early (likely more important with large pools)
+
+-   Limiting based on home field advantage (don't waste a team's week when they are on the road)
+
+-   Remaining strength of schedule (pick a team this week before their schedule gets harder)
+
+-   Pick teams early that are at risk of injury to key contributors (teams with high value but injury prone QB or RB should generally be picked earlier)
+
+-   Save choices of teams that are playing against teams that might be jockeying for high draft picks for late in the season. (Tanking for draft picks is less of an issue in NBA than NFL but may still be a useful factor.)
+
+## Datasets and Packages
+
+There are several potential packages of data that could be useful.
+
