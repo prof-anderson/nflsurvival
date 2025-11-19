@@ -32,3 +32,32 @@ Factors that might affect:
 
 There are several potential packages of data that could be useful.
 
+nflseedR is a popular package that allows simulating NFL seasons.  
+
+### Using nflseedR
+
+```{r}
+library(nflseedR) # NFL data and simulation
+library(dplyr)    # Data munging package
+library(DT)       # Data table package 
+```
+
+To be consistent with the vignette for the package, let's explore the 2022 season.  
+
+```{r}
+all_games <- nflseedR::sims_games_example |> 
+  dplyr::filter(game_type == "REG")
+DT::datatable(all_games)
+```
+
+This is a listing of all the 2022 regular season games.
+
+
+```{r}
+sim <- nflseedR::nfl_simulations(
+  games = all_games,
+  simulations = 4,
+  chunks = 2
+)
+```
+
