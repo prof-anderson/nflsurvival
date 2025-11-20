@@ -131,7 +131,7 @@ xteams <- list(sim$standings$team[1:32])
 ```
 
 
-```{r}
+```{r error=TRUE}
 com1 <- nflseedR::nflseedR_compute_results(
   team = xteams,
   games = wk1_games,    # Week 1 regular season games from 2022-23
