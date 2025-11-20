@@ -32,17 +32,18 @@ Factors that might affect:
 
 There are several potential packages of data that could be useful.
 
-nflseedR is a popular package that allows simulating NFL seasons.  
+nflseedR is a popular package that allows simulating NFL seasons.
 
 ### Using nflseedR
 
 ```{r}
-library(nflseedR) # NFL data and simulation
-library(dplyr)    # Data munging package
-library(DT)       # Data table package 
+library(nflseedR)    # NFL data and simulation
+library(dplyr)       # Data munging package
+library(DT)          # Data table package 
+library(kableExtra)  # Also for doing tables
 ```
 
-To be consistent with the vignette for the package, let's explore the 2022 season.  
+To be consistent with the vignette for the package, let's explore the 2022 season.
 
 ```{r}
 all_games <- nflseedR::sims_games_example |> 
@@ -52,12 +53,94 @@ DT::datatable(all_games)
 
 This is a listing of all the 2022 regular season games.
 
+This does a simulation of all of the 2022 regular season games with four replications. It is chunked into two groups for allowing parallelization if the system supports it.
 
 ```{r}
 sim <- nflseedR::nfl_simulations(
-  games = all_games,
-  simulations = 4,
-  chunks = 2
+  games = all_games,            # All regular season games from 2022-23
+  simulations = 4,              # Run 4 simulated seasons
+  chunks = 2                    # Parallelizes into 2 chunks for speed 
+                                #    Divides the 4 sims into 2 sims each
 )
+```
+
+Let's take a step back focus on the week by week information.
+
+With that, let's start by reviewing the schedule data set better.
+
+```{r}
+wk1_games <- nflseedR::sims_games_example |> 
+  dplyr::filter(game_type == "REG")       |>
+  dplyr::filter(week == 1)                
+DT::datatable(wk1_games)
+```
+
+```{r}
+kbl(wk1_games)
+```
+
+-   Let's look over the core schedule data in the data table.\
+    First column is just a number for the game.
+
+-   season is season, or in this case the 2022-23 season.
+
+-   `game_type` is regular (REG) or playoff. For this analysis we only care about regular season games.
+
+-   `week` is the week number. This has changed over the years to now 18 weeks for each team to play a 17 game schedule.
+
+-   `away_team` and `home_team` are the 3 letter codes of the franchise/team for the away and home teams.
+
+-   `away_rest` and `home_rest` describe the number of days of rest since their previous games for the away and home teams respectively. *Note: It defaults to 7 for the start of the season. I don't know if it adds time for teams coming off a bye or that played a Thursday night game the previous week.*
+
+-   `location` says `Home` for each game. Presumably international or neutral site location games are coded differently.
+
+-   result indicates the actual outcome of the game. For example, the Atlanta Falcons (`ATL`) lost their 2022 home opener to the New Orleans Saints (`NO`) 26-27 and therefore the result is -`1.`It is unclear why several games are listed as result of `NA` though as all those games were played. Perhaps this is a fluke in the sample dataset. For example, the `BUF LA` game's score was 31-10 (11) and was a Thursday game played 3 days before most of the other games.
+
+This is sufficient for simulation to occur.
+
+Now, let's simply simulate week 1 once.
+
+```{r}
+sim1 <- nflseedR::nfl_simulations(
+  games = wk1_games,    # Week 1 regular season games from 2022-23
+  simulations = 1,      # Run 1 simulated season
+  chunks=1,             # Run as all in one chunk
+  verbosity="NONE",     # Default is "MIN"
+  tiebreaker_depth = "SOS")  # 1 week of data is not enough for tie breakers
+                             # leaving at default does not work for just 1
+                             # week.
+
+```
+
+This is odd. It worked to simulate the whole season but it appears to be
+
+Other questions,
+
+where do I find initial team ratings of some form?
+
+Looks like perhaps I need to use the routine that runs inside of the simulation, `nflseedR_compute_results`.
+
+Let's try running this case.
+
+```{r}
+#standings <- nflseedR::nfl_standings(wk1_games, ranks = "DRAFT")
+#season_data <- [season == 2022]
+#teams <- season_data$team
+
+xteams <- list(sim$standings$team[1:32])
+```
+
+
+```{r}
+com1 <- nflseedR::nflseedR_compute_results(
+  team = xteams,
+  games = wk1_games,    # Week 1 regular season games from 2022-23
+  simulations = 1,      # Run 1 simulated season
+  chunks=1,             # Run as all in one chunk
+  verbosity="NONE",     # Default is "MIN"
+  tiebreaker_depth = "SOS")  # 1 week of data is not enough for tie breakers
+                             # leaving at default does not work for just 1
+                             # week.
+
 ```
 
