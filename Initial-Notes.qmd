@@ -3,10 +3,20 @@ title: "Notes on NFL Survival Betting Strategies: An OR Perspective"
 format: html
 editor: visual
 author: "Tim Anderson"
-
 ---
 
 # NFL Survival Betting Strategies-An OR Perspective
+
+## Collaboration & Logistics Notes
+
+This QMD file is for experimenting and scribbling thoughts. I (Tim) made this file as I try to better understand some thoughts on the subject. It gives a spot for random thoughts and exploration on the concepts along with coding and exploring the data structures. It may grow to a large size. Feel free to extend this or create your own file(s) as well in this github repository.
+
+This file is a Quarto Markdown document. This is the next generation of an R Markdown document. There are modest differences. Feel free to create or use an RMD or R script file if they are more fitting with your workflow. I prefer RMDs but am using this as an opportunity on a greenfield project to use QMD instead. Note that the nflsim2.Rmd is an RMD file since this is from the package's vignette and I wanted to keep it identical.
+
+I (Tim) am not a github expert or R expert and am open to suggestions. Frequent pushes, pulls, and commits though will likely help keep things working smoothly.
+
+I will back in Atlanta, approximately January 6th. Available for zooms while away.\
+tim.anderson\@pdx.edu, 503-313-4668, [link](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2x2icXYQrEGEHMVN4WQBDSCrWhOX4px9DhycEyqc4g_mP6Ys3wKO60TXPvucwbK9CauLfCl192 "Scheduling Link") for calendar scheduling
 
 ## Introduction
 
@@ -18,7 +28,7 @@ The goal of this analysis is to examine different betting strategies. There is a
 
 -   Point spread, win probability, ELO differential, or other metric).
 
--   Anti-team - pick a bad team and whenever possible, pick their opponent.  For example, pick against the New York Jets.  
+-   Anti-team - pick a bad team and whenever possible, pick their opponent. For example, pick against the New York Jets.
 
 Factors that might affect:
 
@@ -31,7 +41,6 @@ Factors that might affect:
 -   Pick teams early that are at risk of injury to key contributors (teams with high value but injury prone QB or RB should generally be picked earlier)
 
 -   Save choices of teams that are playing against teams that might be jockeying for high draft picks for late in the season. (Tanking for draft picks is less of an issue in NBA than NFL but may still be a useful factor.)
-
 
 ## Datasets and Packages
 
@@ -234,12 +243,31 @@ DT::datatable(sims$game_summary,
 
 #### End of Season Results
 
-Notice that the results show for each simulation what the result is, including the playoffs.  This is not really needed for our purpose. In our case, it is 32x4=128 simulation results (rows). Note that it will grow in size quickly with a lot of simulation results.  
+Notice that the results show for each simulation what the result is, including the playoffs. This is not really needed for our purpose. In our case, it is 32x4=128 simulation results (rows). Note that it will grow in size quickly with a lot of simulation results.
 
 ```{r}
 DT::datatable(sims$standings, 
               caption="Simulated end of season standings for 2024 season")
 ```
 
+## Future Extensions
 
+To keep from scope creep from happening on the initial effort and to serve as reminders for future stuff, here is a spot for ideas for future papers, projects, or extensions.
 
+### Testing robustness with respect to injuries
+
+The ELO model allows for randomness in each game and adjusts the ELO for the following week but presumably does not model other systematic changes in team strength. A random perturbation could be generated each week, for each team, to account for an injury/suspension) or return from injury/suspension or other effect. These could be "knowable" by the model for weekly selection or unknowable. Injuries or suspensions might be done as strictly non-positive but return from injury might be modeled by allowing positive perturbations.
+
+Trades might be positive or negative. Presumably strong teams might make trades of future draft picks that would be positive perturbations while weak teams pack it in for the season and are negative perturbations.
+
+Might test sensitivity of the results/heuristic success to increasing randomness (wider distribution of randomness). At some point, naive strategies might approach sophisticated ones in performance.
+
+### Options pricing
+
+If we are successful in building a robust tool, it might be able to examine options prices for "live tickets" in later weeks.
+
+This could be done for making money or validation purposes.
+
+### Scanning competitors in pool for strategies/remaining picks
+
+Assuming transparency of all picks, a smart selection strategy would likely factor in the remaining choices for others. For example in a large pool, late in the season with a lot of competitors still active, if it is known that a lot of people still have Detroit saved as a strong choice available, a smart choice might be to not pick or pick against Detroit.
