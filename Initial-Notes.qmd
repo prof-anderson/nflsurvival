@@ -1,6 +1,6 @@
 ---
 title: "Notes on NFL Survival Betting Strategies: An OR Perspective"
-format: pdf
+format: html
 editor: visual
 ---
 
@@ -133,7 +133,7 @@ xteams <- list(sim$standings$team[1:32])
 
 ```{r error=TRUE}
 com1 <- nflseedR::nflseedR_compute_results(
-  team = xteams,
+  teams = xteams,
   games = wk1_games,    # Week 1 regular season games from 2022-23
   simulations = 1,      # Run 1 simulated season
   chunks=1,             # Run as all in one chunk
@@ -143,4 +143,72 @@ com1 <- nflseedR::nflseedR_compute_results(
                              # week.
 
 ```
+
+## Another try at analysis
+
+```{r}
+games <- nflreadr::load_schedules(2024) |> 
+  dplyr::filter(game_type == "REG") |> 
+  dplyr::mutate(
+    result = NA_integer_,
+    away_score = NA_integer_,
+    home_score = NA_integer_
+  )
+```
+
+
+```{r }
+team_ratings <- tibble::tribble(
+  ~team, ~spread,
+  "ARI", -2.4,
+  "ATL",  0.0,
+  "BAL",  3.9,
+  "BUF",  2.1,
+  "CAR", -5.0,
+  "CHI", -0.2,
+  "CIN",  2.9,
+  "CLE",  1.1,
+  "DAL",  2.1,
+  "DEN", -4.0,
+  "DET",  2.6,
+  "GB",   1.8,
+  "HOU",  1.8,
+  "IND", -0.6,
+  "JAX",  0.1,
+  "KC",   4.5,
+  "LA",   0.9,
+  "LAC", -0.7,
+  "LV",  -2.7,
+  "MIA",  1.6,
+  "MIN", -2.1,
+  "NE",  -4.5,
+  "NO",  -2.2,
+  "NYG", -3.5,
+  "NYJ",  2.1,
+  "PHI",  2.0,
+  "PIT", -0.6,
+  "SEA", -1.5,
+  "SF",   5.2,
+  "TB",  -1.8,
+  "TEN", -3.2,
+  "WAS", -3.2
+)
+setNames(team_ratings$spread, team_ratings$team)
+```
+
+```{r}
+team_ratings$elo <- 1500 + 25 * team_ratings$spread
+  # Simple model for converting spread to ELO - used in package Vignette 
+```
+
+
+
+```{r}
+sims <- nflseedR::nfl_simulations(
+  games = games,
+  simulations = 4,
+  chunks = 2
+)
+```
+
 
