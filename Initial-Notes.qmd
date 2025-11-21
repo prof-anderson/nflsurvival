@@ -5,6 +5,23 @@ editor: visual
 author: "Tim Anderson"
 ---
 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(nflseedR)
+options(digits = 3)
+options(nflreadr.verbose = FALSE)
+options(keep.source = TRUE)
+if (future::supportsMulticore()){
+  future::plan("multicore")
+} else {
+  future::plan("multisession")
+}
+```
+
 # NFL Survival Betting Strategies-An OR Perspective
 
 ## Collaboration & Logistics Notes
@@ -249,6 +266,35 @@ Notice that the results show for each simulation what the result is, including t
 DT::datatable(sims$standings, 
               caption="Simulated end of season standings for 2024 season")
 ```
+
+## Technical Questions or Issues
+
+Some of these may be minor technical questions or issues that are directly or indirectly related to this project.
+
+### Elo Ranking Information
+
+The model appears to use ELO rather than point spread or expected win %. Something to investigate and document.
+
+### Getting CoPilot working within RStudio
+
+Microsoft offers a free CoPilot for Github for students and faculty. I'm working on getting that activated and may then give it a try. Might be helpful for this.
+
+I think this likely provides the same capability as GA Tech's copilot access from within the RStudio environment.
+
+### Should Repo be changed to private?
+
+I think that I set it up for public access by default. Should/can it be changed to private?
+
+### Multicore for parallelization
+
+The simulation library used here support R's Future package for multicore functionality.  Alas, my laptop (Lenovo Thinkpad Carbon, Gen 12) does not support it in R.  This can be tested in the following code chunk.  
+
+```{r}
+future::supportsMulticore()
+```
+
+Mine is false.  
+
 
 ## Future Extensions
 
