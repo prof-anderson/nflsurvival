@@ -287,14 +287,13 @@ I think that I set it up for public access by default. Should/can it be changed 
 
 ### Multicore for parallelization
 
-The simulation library used here support R's Future package for multicore functionality.  Alas, my laptop (Lenovo Thinkpad Carbon, Gen 12) does not support it in R.  This can be tested in the following code chunk.  
+The simulation library used here support R's Future package for multicore functionality.  Alas, my laptop (Lenovo Thinkpad Carbon, Gen 12, Intel Core 7 Ultra 165U, 32 GB of RAM) does not support it in R.  This can be tested in the following code chunk.  
 
 ```{r}
 future::supportsMulticore()
 ```
 
-Mine is false.  
-
+Mine is `false`.  May need to use a more powerful computer for larger simulation runs.
 
 ## Future Extensions
 
