@@ -2,19 +2,23 @@
 title: "Notes on NFL Survival Betting Strategies: An OR Perspective"
 format: html
 editor: visual
+author: "Tim Anderson"
+
 ---
 
 # NFL Survival Betting Strategies-An OR Perspective
 
 ## Introduction
 
-Survival betting pools in the NFL is based on each week being in a pool where you select a team to win. If your team wins, you advance to the next week. The goal is to be the last one "surviving".
+Survival betting pools in the NFL are based on each week being in a pool where you select a team to win. If your team wins, you advance to the next week. The goal is to be the last one "surviving".
 
 The goal of this analysis is to examine different betting strategies. There is a wide variety of selection strategies. These are generally naive algorithms.
 
 -   Selecting the strongest team each week. Selecting the team with the strongest odds of winning each week.
 
 -   Point spread, win probability, ELO differential, or other metric).
+
+-   Anti-team - pick a bad team and whenever possible, pick their opponent.  For example, pick against the New York Jets.  
 
 Factors that might affect:
 
@@ -27,6 +31,7 @@ Factors that might affect:
 -   Pick teams early that are at risk of injury to key contributors (teams with high value but injury prone QB or RB should generally be picked earlier)
 
 -   Save choices of teams that are playing against teams that might be jockeying for high draft picks for late in the season. (Tanking for draft picks is less of an issue in NBA than NFL but may still be a useful factor.)
+
 
 ## Datasets and Packages
 
@@ -130,7 +135,6 @@ Let's try running this case.
 xteams <- list(sim$standings$team[1:32])
 ```
 
-
 ```{r error=TRUE}
 com1 <- nflseedR::nflseedR_compute_results(
   teams = xteams,
@@ -155,7 +159,6 @@ games <- nflreadr::load_schedules(2024) |>
     home_score = NA_integer_
   )
 ```
-
 
 ```{r }
 team_ratings <- tibble::tribble(
@@ -201,8 +204,6 @@ team_ratings$elo <- 1500 + 25 * team_ratings$spread
   # Simple model for converting spread to ELO - used in package Vignette 
 ```
 
-
-
 ```{r}
 sims <- nflseedR::nfl_simulations(
   games = games,
@@ -210,5 +211,35 @@ sims <- nflseedR::nfl_simulations(
   chunks = 2
 )
 ```
+
+### Reviewing results
+
+Let's look over the results of this simulation. Some items: It only looks at the regular season.
+
+-   I want look over the revised ELO ratings.
+
+-   Need to find where they are tucked away.
+
+```{r}
+DT::datatable(sims$games, 
+              caption="Simulated game results for 2024 season")
+
+DT::datatable(sims$overall, 
+              caption="Simulated overall for 2024 season")
+
+DT::datatable(sims$game_summary, 
+              caption="Simulated game summaries for 2024 season")
+
+```
+
+#### End of Season Results
+
+Notice that the results show for each simulation what the result is, including the playoffs.  This is not really needed for our purpose. In our case, it is 32x4=128 simulation results (rows). Note that it will grow in size quickly with a lot of simulation results.  
+
+```{r}
+DT::datatable(sims$standings, 
+              caption="Simulated end of season standings for 2024 season")
+```
+
 
 
