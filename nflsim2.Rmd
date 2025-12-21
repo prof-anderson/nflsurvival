@@ -29,10 +29,10 @@ The general idea is that the user only passes a table with NFL schedule data to 
 
 What are the advantages of this approach?
 
-1. You have full control over which games are simulated. 
-1. It is even easier to answer questions like "what if team x wins the next two games?"
-1. You can put together your own playoffs.
-1. Waiving postseason or draft order improves run time.
+1.  You have full control over which games are simulated.
+2.  It is even easier to answer questions like "what if team x wins the next two games?"
+3.  You can put together your own playoffs.
+4.  Waiving postseason or draft order improves run time.
 
 It is still possible to pass your own function for determining the weekly results and all the additional data required for this to the simulator. The user has full control and nflseedR takes care of standings, tiebreakers and everything else with maximum efficiency.
 
@@ -42,12 +42,10 @@ The detailed documentation of the function parameters can be found directly in t
 
 At its core, nflseedR only requires 2 things to run NFL simulations.
 
-1. The `games` of a season for which missing results are to be simulated.
-1. A function to `compute_results` of those games.
+1.  The `games` of a season for which missing results are to be simulated.
+2.  A function to `compute_results` of those games.
 
-Simulations are performed on a weekly basis. The reason for this is that Elo-based approaches have proven successful for NFL simulations. This requires updating Elo values based on one week's results and using the new values for next week's simulation.
-nflseedR provides a default function for `compute_results` which is named 
-`nflseedR_compute_results` so that the simulator is functional right from the start.
+Simulations are performed on a weekly basis. The reason for this is that Elo-based approaches have proven successful for NFL simulations. This requires updating Elo values based on one week's results and using the new values for next week's simulation. nflseedR provides a default function for `compute_results` which is named `nflseedR_compute_results` so that the simulator is functional right from the start.
 
 If not provided by the user (we'll discuss how to do this later), the function picks a random Elo for every team, and uses those as the starting Elo ratings for all teams. It will adjust Elo ratings within each simulation as each week is simulated. (The Elo model used is loosely based off of that of [FiveThirtyEight](https://fivethirtyeight.com/methodology/how-our-nfl-predictions-work/).)
 
@@ -76,9 +74,12 @@ Before we take a closer look at the contents of a simulation, we will first use 
 
 The output of `nfl_simulations()` is a list of class `"nflseedR_simulation"` that holds five data frames with simulation results as well as a list of parameters used in the simulation. Here are the contents of each:
 
-<details> 
-  <summary> **standings** </summary>
-  One row per team per simulation. Variable names and their descriptions are provided in the table below.
+<details>
+
+<summary>**standings**</summary>
+
+One row per team per simulation. Variable names and their descriptions are provided in the table below.
+
 ```{r echo=FALSE}
 DT::datatable(
   nflseedR::dictionary_standings,
@@ -87,11 +88,15 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
 </details>
 
-<details> 
-  <summary> **games** </summary>
-  One row per game per simulation. Variable names and their descriptions are provided in the table below.
+<details>
+
+<summary>**games**</summary>
+
+One row per game per simulation. Variable names and their descriptions are provided in the table below.
+
 ```{r echo=FALSE}
 DT::datatable(
   nflseedR::dictionary_games,
@@ -100,11 +105,15 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
 </details>
 
-<details> 
-  <summary> **overall** </summary>
-  One row per team, aggregated across all simulations. Sorted by `conf` then `division` then `team`. This is a good reference for looking at futures bets, since this should represent your model's chances of various things happening for each team. Variable names and their descriptions are provided in the table below.
+<details>
+
+<summary>**overall**</summary>
+
+One row per team, aggregated across all simulations. Sorted by `conf` then `division` then `team`. This is a good reference for looking at futures bets, since this should represent your model's chances of various things happening for each team. Variable names and their descriptions are provided in the table below.
+
 ```{r echo=FALSE}
 DT::datatable(
   nflseedR::dictionary_overall,
@@ -113,11 +122,15 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
 </details>
 
-<details> 
-  <summary> **team_wins** </summary>
-  Each team has a row for 0 wins, 0.5 wins, 1 win, 1.5 wins, ... , 15.5 wins, 16 wins. These are aggregated across all simulations and are intending to represent your model's probability for teams being below or above a certain win total, making them an excellent reference for using your model to make win total bets. Variable names and their descriptions are provided in the table below.
+<details>
+
+<summary>**team_wins**</summary>
+
+Each team has a row for 0 wins, 0.5 wins, 1 win, 1.5 wins, ... , 15.5 wins, 16 wins. These are aggregated across all simulations and are intending to represent your model's probability for teams being below or above a certain win total, making them an excellent reference for using your model to make win total bets. Variable names and their descriptions are provided in the table below.
+
 ```{r echo=FALSE}
 DT::datatable(
   nflseedR::dictionary_team_wins,
@@ -126,11 +139,15 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
 </details>
 
-<details> 
-  <summary> **game_summary** </summary>
-  One row per game, aggregated across all simulations. Sorted by `game_type` then `week` then `away_team` then `home_team`. Variable names and their descriptions are provided in the table below.
+<details>
+
+<summary>**game_summary**</summary>
+
+One row per game, aggregated across all simulations. Sorted by `game_type` then `week` then `away_team` then `home_team`. Variable names and their descriptions are provided in the table below.
+
 ```{r echo=FALSE}
 DT::datatable(
   nflseedR::dictionary_game_summary,
@@ -139,28 +156,32 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
 </details>
 
-<details> 
-  <summary> **sim_params** </summary>
-  a list of parameters used in the simulation. The list contains the following parameters which are described in `nfl_simulations()`
-  
-* `nfl_season`
-* `playoff_seeds`
-* `simulations`
-* `chunks`
-* `byes_per_conf`
-* `tiebreaker_depth`
-* `sim_include`
-* `verbosity`
-* `sims_per_round`
-* `nflseedR_version`
-* `finished_at`
+<details>
+
+<summary>**sim_params**</summary>
+
+a list of parameters used in the simulation. The list contains the following parameters which are described in `nfl_simulations()`
+
+-   `nfl_season`
+-   `playoff_seeds`
+-   `simulations`
+-   `chunks`
+-   `byes_per_conf`
+-   `tiebreaker_depth`
+-   `sim_include`
+-   `verbosity`
+-   `sims_per_round`
+-   `nflseedR_version`
+-   `finished_at`
+
 </details>
 
 # Realistic Example
 
-In the quick start example above, we have simulated a few games of the 2022 season based on randomly generated Elo values. Now let's run through a slightly more realistic example. This time we simulate the complete 2024 season and use market implied team ratings. 
+In the quick start example above, we have simulated a few games of the 2022 season based on randomly generated Elo values. Now let's run through a slightly more realistic example. This time we simulate the complete 2024 season and use market implied team ratings.
 
 First of all, we need the games. We load the 2024 season and remove the postseason, because we want to simulate the postseason as well. We also remove all results because nflseedR only simulates missing results.
 
@@ -215,7 +236,7 @@ team_ratings <- tibble::tribble(
 setNames(team_ratings$spread, team_ratings$team)
 ```
 
-We use a very simple approach to convert the spreads into Elo ratings. 
+We use a very simple approach to convert the spreads into Elo ratings.
 
 ```{r}
 team_ratings$elo <- 1500 + 25 * team_ratings$spread
@@ -261,7 +282,7 @@ The output contains a lot of pre-aggregated information, as well as the individu
 sims$overall |> dplyr::filter(team == "LAC") |> knitr::kable()
 ```
 
-We can see the Chargers got `r round(sims$overall$wins[sims$overall$team == "LAC"], 1)` wins on average. They made the playoffs `r scales::label_percent(1)(sims$overall$playoff[sims$overall$team == "LAC"])` of simulations, won the division in `r scales::label_percent(1)(sims$overall$div1[sims$overall$team == "LAC"])`, won the Super Bowl in `r scales::label_percent(1)(sims$overall$won_sb[sims$overall$team == "LAC"])`, and in `r scales::label_percent(1)(sims$overall$draft5[sims$overall$team == "LAC"])` did they receive a top five draft pick. The `teams` section of the output will show how a team did in each simulated season. 
+We can see the Chargers got `r round(sims$overall$wins[sims$overall$team == "LAC"], 1)` wins on average. They made the playoffs `r scales::label_percent(1)(sims$overall$playoff[sims$overall$team == "LAC"])` of simulations, won the division in `r scales::label_percent(1)(sims$overall$div1[sims$overall$team == "LAC"])`, won the Super Bowl in `r scales::label_percent(1)(sims$overall$won_sb[sims$overall$team == "LAC"])`, and in `r scales::label_percent(1)(sims$overall$draft5[sims$overall$team == "LAC"])` did they receive a top five draft pick. The `teams` section of the output will show how a team did in each simulated season.
 
 Now let nflseedR summarize the simulation for you by using `summary()` with the nflseedR simulation object. This will print a gt table.
 
@@ -273,7 +294,7 @@ summary(sims)
 
 ## User-defined `compute_results`
 
-But of course the real value of nflseedR is putting in your own model into the simulator. To accomplish this, you can write your own `compute_results` function which will determine the outcome of games instead. 
+But of course the real value of nflseedR is putting in your own model into the simulator. To accomplish this, you can write your own `compute_results` function which will determine the outcome of games instead.
 
 Now it gets important: **nflseedR will use your function during the simulations without any checks**. The reason for this is that we want maximum performance and such tests would slow us down. In addition, repeated checks are not necessary if we have checked once in advance that the function works as nflseedR expects it to. And this is exactly what `simulations_verify_fct()` is for. So if you want to use your own `compute_results` function, all you need to do is check how it works in advance with `simulations_verify_fct()`. If there are no errors, then your function works exactly as nflseedR needs it to simulate. Please see the documentation of `simulations_verify_fct()` for a detailed description of expected `compute_results` behavior.
 
@@ -373,7 +394,7 @@ biased_games_model <- function(teams, games, week_num, ...) {
 }
 ```
 
-This allows us to define `best` and `worst`, and use that information to determine a result (in this case, have the best team always win and the  worst team always lose). While `best` and `worst` are in this example single-length character vectors, they can be data frames or any other R data type.
+This allows us to define `best` and `worst`, and use that information to determine a result (in this case, have the best team always win and the worst team always lose). While `best` and `worst` are in this example single-length character vectors, they can be data frames or any other R data type.
 
 Let's simulate using this:
 
@@ -400,7 +421,27 @@ Sometimes though you want your data to keep updating as the simulation progresse
 
 Read the code and comments of the source of `nflseedR_compute_results` for specific tips on doing this but here are good ones:
 
-* You can add columns to `teams` and/or `games` if you want.
-* When doing joins to do the above, do left joins to make sure no rows are removed.
-* Remove any "helper" columns you generate along the way you don't actually need before returning.
-* Make sure any column doesn't get blindly joined on so it has `.x` and `.y` versions in week 2 and R throws an error because an expected column name doesn't exist.
+-   You can add columns to `teams` and/or `games` if you want.
+-   When doing joins to do the above, do left joins to make sure no rows are removed.
+-   Remove any "helper" columns you generate along the way you don't actually need before returning.
+-   Make sure any column doesn't get blindly joined on so it has `.x` and `.y` versions in week 2 and R throws an error because an expected column name doesn't exist.
+
+# Restarted the Effort
+
+Took a pause for the holidays and continued in mid-December.
+
+Used Google Gemini to assist with vibe coding an R Script for the analysis, `nflsurvival-Script.R.` This required many iterations of testing and refinement but generated `nflsurvival-Script-v02.R` and `nflsurvival-Script-v03.R` above. Notably, `v02` uses the actual game results rather than the simulated results in `v03`. The final version is `nflsurvival-Script-v03.R` which will be discussed later in this Rmd document.
+
+Version 3 still needs more work on the following items:
+
+-   Proofreading the R Script.
+
+-   Testing alternate heuristics
+
+-   Better organizing results
+
+-   Looping for simulated results
+
+-   Exploring whether the season ELOs are updated realistically
+
+-   Considering the effect of competition
