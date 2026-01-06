@@ -1,7 +1,7 @@
 # Install packages if not already installed
 # install.packages(c("nflseedr", "nflreadr", "dplyr", "tidyr"))
 
-library(nflseedr)
+library(nflseedR)
 library(nflreadr)
 library(dplyr)
 library(tidyr)

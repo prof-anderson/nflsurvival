@@ -137,13 +137,13 @@ sim1 <- nflseedR::nfl_simulations(
   simulations = 1,      # Run 1 simulated season
   chunks=1,             # Run as all in one chunk
   verbosity="NONE",     # Default is "MIN"
-  tiebreaker_depth = "SOS")  # 1 week of data is not enough for tie breakers
+  tiebreaker_depth = "PRE-SOV")  # 1 week of data is not enough for tie breakers
                              # leaving at default does not work for just 1
                              # week.
 
 ```
 
-This is odd. It worked to simulate the whole season but it appears to be
+This is odd. It worked to simulate the whole season but it appears to be a problem with a bug in the playoff tiebreaking routine in the package.  I don't care about playoff or draft tie breaking so this is not something I need.  Note that tiebreaker options are ""SOS", "PRE-SOV", "POINTS" or "RANDOM".  
 
 Other questions,
 
